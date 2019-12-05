@@ -11,8 +11,10 @@ Interface used to control motorized stage by Thorlabs [Thorlabs stage](https://w
 
 # Usage
 
-*  pass serial number of your stage initialization of class
-```T = ThorlabsZStage(serialnumber);
+Pass serial number of your stage initialization of class
+
+```
+T = ThorlabsZStage(serialnumber);
 
 % move stage to a position
 T.pos = 25; % 0 ... 50 mm
