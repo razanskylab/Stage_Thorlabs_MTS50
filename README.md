@@ -11,7 +11,28 @@ Interface used to control motorized stage by Thorlabs [Thorlabs stage](https://w
 
 # Usage
 
-You need to pass the Serial number of your stage to the command ThorlabsZStage during initialization.
+*  pass serial number of your stage initialization of class
+`
+T = ThorlabsZStage(serialnumber);
+
+% move stage to a position
+T.pos = 25; % 0 ... 50 mm
+
+% read current stage position
+currPos = T.pos; % mm
+
+% Set velocity of stage during movement (this command does not induce movement)
+T.vel = 10; % mm / s
+
+% read velocity (not currently but the one used when moving)
+currVel = T.vel;
+
+% home stage
+T.Home();
+
+% identify controller by letting display blink
+T.Identify();
+`
 
 
 
