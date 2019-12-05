@@ -11,7 +11,8 @@ Interface used to control motorized stage by Thorlabs [Thorlabs stage](https://w
 
 # Usage
 
-Pass serial number of your stage initialization of class
+*  Pass serial number of your stage initialization of class
+*  Replace MOTORPATHDEFAULT by your installation path of Kinesis
 
 ```
 T = ThorlabsZStage(serialnumber);
@@ -22,17 +23,16 @@ T.pos = 25; % 0 ... 50 mm
 % read current stage position
 currPos = T.pos; % mm
 
-% Set velocity of stage during movement (this command does not induce movement)
-T.vel = 10; % mm / s
-
-% read velocity (not currently but the one used when moving)
-currVel = T.vel;
-
 % home stage
 T.Home();
 
 % identify controller by letting display blink
 T.Identify();
+
+% manually connect or disconnect device using
+T.Connect(serialnumber);
+T.Disconnect();
+% but this is usually handled by class constructor and desctructor
 ```
 
 
