@@ -4,28 +4,24 @@ classdef ThorlabsZStage < handle
 
 		% path to DLL files (edit as appropriate)
 		MOTORPATHDEFAULT='C:\Program Files\Thorlabs\Kinesis\';
-
 		% DLL files to be loaded
 		DEVICEMANAGERDLL='Thorlabs.MotionControl.DeviceManagerCLI.dll';
 		DEVICEMANAGERCLASSNAME='Thorlabs.MotionControl.DeviceManagerCLI.DeviceManagerCLI'
 		GENERICMOTORDLL='Thorlabs.MotionControl.GenericMotorCLI.dll';
 		GENERICMOTORCLASSNAME='Thorlabs.MotionControl.GenericMotorCLI.GenericMotorCLI';
-
 		BRUSHEDMOTORDLL='Thorlabs.MotionControl.KCube.DCServoCLI.dll';  
-      	BRUSHEDMOTORCLASSNAME='Thorlabs.MotionControl.KCube.DCServoCLI.KCubeDCServo';
-
-      	POS_MAX = 42;
-      	POS_MIN = 0;
-
-      	TPOLLING=250;            % Default polling time
-      	TIMEOUTSETTINGS = 7000;
-      	TIMEOUTMOVE = 100000;
+    BRUSHEDMOTORCLASSNAME='Thorlabs.MotionControl.KCube.DCServoCLI.KCubeDCServo';
+    POS_MAX(1, 1) double = 50;
+    POS_MIN(1, 1) double = 0;
+    TPOLLING(1, 1) = 250; % Default polling time
+    TIMEOUTSETTINGS(1, 1) = 7000;
+    TIMEOUTMOVE(1, 1) = 100000;
 
 	end
 
 	properties (SetAccess = private)
-		isConnected = 0;
-		isHomed = 0;
+		isConnected(1, 1) logical = 0;
+		isHomed(1, 1) logical = 0;
 		serialnumber;
 		deviceNET;
 		motorSettingsNET;
@@ -34,7 +30,7 @@ classdef ThorlabsZStage < handle
 	end
 
 	properties
-		pos; % specifies the position of the stage
+		pos(1, 1) double; % specifies the position of the stage
 		controllername;
 		stagename;
 		controllerdescription;
@@ -64,28 +60,18 @@ classdef ThorlabsZStage < handle
 		Enable(tzs);
 		Identify(tzs);
 		Home(tzs);
+		Move_No_Wait(tzs, pos);
+		Wait_Move(tzs);
 
 		% Moves to position and waits until target positon is reached
 		function set.pos(tzs, pos)
-			
-			if pos > tzs.POS_MAX
-				error('Cannot move to this position');
-			elseif pos < tzs.POS_MIN
-				error('Cannot move to this position');
-			else
-				try
-	            	workDone=tzs.deviceNET.InitializeWaitHandler(); % Initialise Waithandler for timeout
-	            	tzs.deviceNET.MoveTo(pos, workDone); % Move device to position via .NET interface
-	            	tzs.deviceNET.Wait(tzs.TIMEOUTMOVE);              % Wait for move to finish
-          		catch % Device faile to move
-              		error(['Unable to Move device ',tzs.serialnumber,' to ',num2str(pos)]);
-          		end
-			end
-					
+	    tzs.Move_No_Wait(pos); % Initialize movement
+	    tzs.Wait_Move(); % Wait for move to finish
 		end
 
+		% read stage position from device
 		function pos = get.pos(tzs)
-			 pos=System.Decimal.ToDouble(tzs.deviceNET.Position);
+			 pos = System.Decimal.ToDouble(tzs.deviceNET.Position);
 		end
 
 	end
