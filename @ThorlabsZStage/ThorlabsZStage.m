@@ -1,3 +1,10 @@
+% File: ThorlabsZStage.m @ ThorlabsZStage
+% Author: Urs Hofmann
+% Mail: hofmannu@ethz.ch
+% Date: 02.02.2021
+
+% Dscription: An interface to the small z stage.
+
 classdef ThorlabsZStage < handle
 
 	properties (Constant, Hidden)
@@ -11,8 +18,8 @@ classdef ThorlabsZStage < handle
 		GENERICMOTORCLASSNAME='Thorlabs.MotionControl.GenericMotorCLI.GenericMotorCLI';
 		BRUSHEDMOTORDLL='Thorlabs.MotionControl.KCube.DCServoCLI.dll';  
     BRUSHEDMOTORCLASSNAME='Thorlabs.MotionControl.KCube.DCServoCLI.KCubeDCServo';
-    POS_MAX(1, 1) double = 50;
-    POS_MIN(1, 1) double = 0;
+    POS_MAX(1, 1) double = 50; % describes the hardware limit of the stage [mm]
+    POS_MIN(1, 1) double = 0; % describes the hardware limit of the stage
     TPOLLING(1, 1) = 250; % Default polling time
     TIMEOUTSETTINGS(1, 1) = 7000;
     TIMEOUTMOVE(1, 1) = 100000;
@@ -34,18 +41,20 @@ classdef ThorlabsZStage < handle
 		controllername;
 		stagename;
 		controllerdescription;
+		soft_max(1, 1) = 50; % adaptable software limit of movement range [mm]
+		soft_min(1, 1) = 0; % adaptable software limit of movement range [mm]
 	end
 
 	methods 
-		function ThorlabsZStage=ThorlabsZStage(varargin)
+		function ThorlabsZStage = ThorlabsZStage(varargin)
 			ThorlabsZStage.Load_DLLs;
 			if (nargin == 1)
 				fprintf('[ThorlabsZStage] Initialise based on constructor variable.\n');
 				if ischar(varargin{1})
 					ThorlabsZStage.Connect(varargin{1});
 				end
-        	end
-        	ThorlabsZStage.Home();
+       end
+       ThorlabsZStage.Home();
 		end
 
 		function delete(tzs)
@@ -72,6 +81,20 @@ classdef ThorlabsZStage < handle
 		% read stage position from device
 		function pos = get.pos(tzs)
 			 pos = System.Decimal.ToDouble(tzs.deviceNET.Position);
+		end
+
+		function set.soft_max(tzs, soft_max)
+			if (tzs.soft_max > tzs.POS_MAX)
+				warning('Max. software limit defined beyond stage movement range');
+			end
+			tzs.soft_max = soft_max;
+		end
+
+		function set.soft_min(tzs, soft_min)
+			if (tzs.soft_min < soft_min)
+				warning('Min. software limit defined beyond stage movement range');
+			end
+			tzs.soft_min = soft_min;
 		end
 
 	end
