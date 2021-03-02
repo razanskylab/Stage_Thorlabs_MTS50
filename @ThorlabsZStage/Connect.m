@@ -1,3 +1,10 @@
+% File: Connect.m @ ThorlabsZStage
+% Author: Urs Hofmann
+% Mail: hofmannu@ethz.ch
+% Date: 03.02.2021
+
+% Description: Init connection to stage
+
 function Connect(tzs, serialNo)
 
 	tzs.List_Devices();

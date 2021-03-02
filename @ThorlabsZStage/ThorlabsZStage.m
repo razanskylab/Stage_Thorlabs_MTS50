@@ -34,6 +34,7 @@ classdef ThorlabsZStage < handle
 		motorSettingsNET;
 		currentDeviceSettingsNET;
 		deviceInfoNET;
+		SERIAL_START = '27'; % all devices of this type start their serial number like this
 	end
 
 	properties
@@ -52,9 +53,22 @@ classdef ThorlabsZStage < handle
 				fprintf('[ThorlabsZStage] Initialise based on constructor variable.\n');
 				if ischar(varargin{1})
 					ThorlabsZStage.Connect(varargin{1});
+				else
+					error('Manually passed serial number should be a char string');					
 				end
-       end
-       ThorlabsZStage.Home();
+			elseif (nargin == 0)
+				% try to automatically find stage
+				serialNumber = ThorlabsZStage.List_Devices();
+				if ~isempty(serialNumber)
+					ThorlabsZStage.Connect(serialNumber{1});
+				else
+					error('Could not autoconnect to any device');
+				end	
+			else
+				error('Invalid number of input arguments passed');				
+			end
+      
+      ThorlabsZStage.Home();
 		end
 
 		function delete(tzs)
