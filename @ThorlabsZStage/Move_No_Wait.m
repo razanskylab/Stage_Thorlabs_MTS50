@@ -19,7 +19,6 @@ function Move_No_Wait(tzs, pos)
 	    catch % Device faile to move
 	    	error(['Unable to Move device ',tzs.serialnumber,' to ',num2str(pos)]);
 	    end
-	   end
 	  end
 	end
 
