@@ -1,10 +1,3 @@
-% File: Connect.m @ ThorlabsZStage
-% Author: Urs Hofmann
-% Mail: hofmannu@ethz.ch
-% Date: 03.02.2021
-
-% Description: Init connection to stage
-
 function Connect(tzs, serialNo)
 
 	tzs.List_Devices();
@@ -31,15 +24,15 @@ function Connect(tzs, serialNo)
             tzs.deviceNET.StartPolling(tzs.TPOLLING);   % Start polling via .NET interface
             tzs.deviceInfoNET= tzs.deviceNET.GetDeviceInfo();                    % Get deviceInfo via .NET interface
             tzs.motorSettingsNET  = tzs.deviceNET.LoadMotorConfiguration(serialNo); % Get motorSettings via .NET interface
-            tzs.isConnected = tzs.deviceNET.IsConnected;
+
             % MotDir = Thorlabs.MotionControl.GenericMotorCLI.Settings.RotationDirections.Forwards; % MotDir is enumeration for 'forwards'
             % h.currentDeviceSettingsNET.Rotation.RotationDirection=MotDir;   % Set motor direction to be 'forwards#
         catch % Cannot initialise device
             error(['Catch: Unable to initialise device ',char(serialNo)]);
         end
+        tzs.isConnected = 1;
     else % Device is already connected
         error('Device is already connected.')
     end
-
     %tzs.Update_Status();   % Update status variables from device
 end

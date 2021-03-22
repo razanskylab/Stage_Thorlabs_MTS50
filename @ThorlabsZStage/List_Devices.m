@@ -1,31 +1,37 @@
-% File: List_Devices.m @ ThorLabsZStage
+% Function: List_Devices.m @ ThorlabsZStage.m
 % Author: Urs Hofmann
 % Mail: hofmannu@ethz.ch
-% Date: 03.02.2021
+% Date: 22.03.2021
 
-% Description: Lists all devices with the corresponding device numbers
+% Description: should list all devices
 
-function serialNumbers = List_Devices(tzs)
+function validSerials = List_Devices(tzs)
 
-	% thorlabsstage.loaddlls; % Load DLLs
-  Thorlabs.MotionControl.DeviceManagerCLI.DeviceManagerCLI.BuildDeviceList();  % Build device list
-  serialNumbersNet = Thorlabs.MotionControl.DeviceManagerCLI.DeviceManagerCLI.GetDeviceList(); % Get device list
-  serialNumbers = cell(ToArray(serialNumbersNet)); % Convert serial numbers to cell array
-	
-  % grep the serial numbers we actually care about
+	 % thorlabsstage.loaddlls; % Load DLLs
+	Thorlabs.MotionControl.DeviceManagerCLI.DeviceManagerCLI.BuildDeviceList();  % Build device list
+	serialNumbersNet = Thorlabs.MotionControl.DeviceManagerCLI.DeviceManagerCLI.GetDeviceList(); % Get device list
+	serialNumbers=cell(ToArray(serialNumbersNet)); % Convert serial numbers to cell array
 
-  corrSerialCount = 0; % counter for number of correct serial numbers
-  for iSerial = 1:length(serialNumbers)
-  	currSerial = serialNumbers{iSerial};
-  	if strcmp(currSerial(1:2), tzs.SERIAL_START)
-  		corrSerialCount = corrSerialCount + 1;
-  		corrSerials{corrSerialCount} = currSerial;
-  	end
-  end
+	% make sure to only return the ones which do start with 27
+	validSerials = [];
+	noValidSerials = 0;
+	for iSerial = 1:length(serialNumbers)
+		currSerial = serialNumbers{iSerial};
+		if strcmp(currSerial(1:2), '27')
+			noValidSerials = noValidSerials + 1;
+			validSerials{noValidSerials} = currSerial;
+		end
+	end
 
-  if (corrSerialCount == 0)
-  	warning('Could not find any device with an appropriate serial number');
-  end
+	% if we did not find anything useful in this shithole, let people know that
+	% we are angry
+	if (noValidSerials == 0)
+		warning('I could not find any device with a correct serial number');
+	end
 
+	% if there is a unique device, return ID instead of cell
+	if (noValidSerials == 1)
+		validSerials = validSerials{1};
+	end
 
 end

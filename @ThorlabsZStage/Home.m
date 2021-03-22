@@ -7,21 +7,16 @@
 % Description: Home stage, required at startup.
 
 function Home(tzs)
-	if tzs.deviceNET.NeedsHoming
-		fprintf('[ThorlabsZStage] Homing device.\n');
+	fprintf('[ThorlabsZStage] Homing device... ');
 	 	
-		tzs.deviceNET.Home(600000);
+	tzs.deviceNET.Home(600000);
 
-	 	if ~tzs.deviceNET.NeedsHoming
-	 		fprintf('[ThorlabsZStage] Successfully homed.\n');
-	 	else
-	 		error('Could not home device');
-	 	end
+	fprintf('done!\n');
 
-	 	tzs.isHomed = 1;
-	 else
-	 	fprintf('[ThorlabsZStage] Homing not required.\n');
-	 	tzs.isHomed = 1;
-	 end
+ 	if ~tzs.deviceNET.NeedsHoming
+ 		fprintf('[ThorlabsZStage] Successfully homed.\n');
+ 	else
+ 		error('Could not home device');
+ 	end
 
 end
