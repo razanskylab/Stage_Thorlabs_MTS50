@@ -1,15 +1,20 @@
+% File: Connect.m @ ThorlabsZStage
+% Author: Urs Hofmann
+% Mail: hofmannu@ethz.ch
+% Date: 22.03.2021
+
+% Description: opens up a fucking connection to this disgusting device
+
 function Connect(tzs, serialNo)
 
-	tzs.List_Devices();
+    % check if serial number appears valid
+    if ~strcmp(serialNo(1:2), '27')
+        error('Invalid serial number passed');
+    end
 
 	if ~tzs.isConnected
-        switch(serialNo(1:2))
-            case '27'   % Serial number corresponds to KCDWHATEVER
-                tzs.deviceNET= ...
-                    Thorlabs.MotionControl.KCube.DCServoCLI.KCubeDCServo.CreateKCubeDCServo(serialNo);   
-            otherwise % Serial number is not correct
-                error('Stage not recognised');
-        end     
+        tzs.deviceNET= ...
+            Thorlabs.MotionControl.KCube.DCServoCLI.KCubeDCServo.CreateKCubeDCServo(serialNo);   
         tzs.deviceNET.ClearDeviceExceptions(); % Clear device exceptions via .NET interface
         tzs.deviceNET.ConnectDevice(serialNo);
         tzs.deviceNET.Connect(serialNo); % Connect to device via .NET interface, 

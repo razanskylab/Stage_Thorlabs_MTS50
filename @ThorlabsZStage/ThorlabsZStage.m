@@ -21,7 +21,7 @@ classdef ThorlabsZStage < handle
 
 	properties (SetAccess = private)
 		isConnected(1, 1) logical = 0;
-		serialnumber;
+		serialnumber(1, :) char;
 		deviceNET;
 		motorSettingsNET;
 		currentDeviceSettingsNET;
@@ -29,7 +29,7 @@ classdef ThorlabsZStage < handle
 	end
 
 	properties(Dependent)
-		isHomed(1, 1) logical = 0;
+		isHomed(1, 1) logical;
 	end
 
 	properties
@@ -48,7 +48,7 @@ classdef ThorlabsZStage < handle
 					ThorlabsZStage.Connect(varargin{1});
 				end
       else
-      	serialNumbers = ThorlabsZStage.List_Devices();
+      	serialNumbers = ThorlabsZStage.List_Devices()
       	ThorlabsZStage.Connect(serialNumbers);
       end
 
@@ -59,7 +59,7 @@ classdef ThorlabsZStage < handle
 		end
 
 		function delete(tzs)
-			if tzs.deviceNET.IsConnected
+			if tzs.isConnected
 				tzs.Disconnect;
 			end
 		end

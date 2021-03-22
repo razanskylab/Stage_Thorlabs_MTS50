@@ -1,3 +1,8 @@
+% File: Load_DLLs @ ThorlabsZStage
+% Author: Urs Hofmann
+% Mail: hofmannu@ethz.ch
+% Date: 27.03.2021
+
 function Load_DLLs(tzs)
 
 	if ~exist(tzs.DEVICEMANAGERCLASSNAME, 'class')
