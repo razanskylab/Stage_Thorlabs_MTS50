@@ -11,12 +11,11 @@ classdef ThorlabsZStage < handle
 		GENERICMOTORCLASSNAME(1, :) char = 'Thorlabs.MotionControl.GenericMotorCLI.GenericMotorCLI';
 		BRUSHEDMOTORDLL(1, :) char = 'Thorlabs.MotionControl.KCube.DCServoCLI.dll';  
     BRUSHEDMOTORCLASSNAME(1, :) char ='Thorlabs.MotionControl.KCube.DCServoCLI.KCubeDCServo';
-    POS_MAX(1, 1) double = 50;
+    POS_MAX(1, 1) double = 50; 
     POS_MIN(1, 1) double = 0;
     TPOLLING(1, 1) = 250; % Default polling time
     TIMEOUTSETTINGS(1, 1) = 7000;
     TIMEOUTMOVE(1, 1) = 100000;
-
 	end
 
 	properties (SetAccess = private)
@@ -48,7 +47,7 @@ classdef ThorlabsZStage < handle
 					ThorlabsZStage.Connect(varargin{1});
 				end
       else
-      	serialNumbers = ThorlabsZStage.List_Devices()
+      	serialNumbers = ThorlabsZStage.List_Devices();
       	ThorlabsZStage.Connect(serialNumbers);
       end
 

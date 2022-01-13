@@ -7,6 +7,10 @@
 
 function Connect(tzs, serialNo)
 
+    if isempty(serialNo)
+        error('serial number passed to function appears to be empty');
+    end
+
     % check if serial number appears valid
     if ~strcmp(serialNo(1:2), '27')
         error('Invalid serial number passed');

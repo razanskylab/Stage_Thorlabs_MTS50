@@ -17,9 +17,11 @@ function validSerials = List_Devices(tzs)
 	noValidSerials = 0;
 	for iSerial = 1:length(serialNumbers)
 		currSerial = serialNumbers{iSerial};
-		if strcmp(currSerial(1:2), '27')
-			noValidSerials = noValidSerials + 1;
-			validSerials{noValidSerials} = currSerial;
+		if ~isempty(currSerial)
+			if strcmp(currSerial(1:2), '27')
+				noValidSerials = noValidSerials + 1;
+				validSerials{noValidSerials} = currSerial;
+			end
 		end
 	end
 
