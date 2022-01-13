@@ -47,15 +47,18 @@ classdef ThorlabsZStage < handle
 				if ischar(varargin{1})
 					ThorlabsZStage.Connect(varargin{1});
 				end
-      else
-      	serialNumbers = ThorlabsZStage.List_Devices()
-      	ThorlabsZStage.Connect(serialNumbers);
-      end
+	      	else
+	      		serialNumbers = ThorlabsZStage.List_Devices();
+	      		if isempty(serialNumbers)
+	      			error("Could not find any devices and serial number was not provided");
+	      		end
+	      		ThorlabsZStage.Connect(serialNumbers);
+	      	end
 
-      % if stage requires homing, do now
-      if ~ThorlabsZStage.isHomed()
-      	ThorlabsZStage.Home();
-      end
+		    % if stage requires homing, do now
+		    if ~ThorlabsZStage.isHomed()
+		      	ThorlabsZStage.Home();
+		    end
 		end
 
 		function delete(tzs)

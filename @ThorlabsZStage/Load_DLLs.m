@@ -14,9 +14,7 @@ function Load_DLLs(tzs)
         catch % DLLs did not load
             error('Unable to load .NET assemblies')
         end
-    else
-        fprintf('[ThorlabsZStage] General DLLs already loaded, using existing ones.\n');
-    end    
+     end    
 
     if ~exist(tzs.BRUSHEDMOTORCLASSNAME, 'class')
         try   % Load in DLLs if not already loaded
@@ -26,8 +24,6 @@ function Load_DLLs(tzs)
         catch % DLLs did not load
             error('Unable to load .NET assemblies')
         end
-    else
-        fprintf('[ThorlabsZStage] Motor specific DLLs already loaded, using existing ones.\n');
-    end
+     end
 
 end
