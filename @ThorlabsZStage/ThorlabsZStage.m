@@ -1,3 +1,10 @@
+% File: ThorlabsZStage.m @ ThorlabsZStage
+% Author: Urs Hofmann
+% Mail: mail@hofmannu.org
+% Date: 14.02.2022
+
+% Description: Interfacing class for our thorlabs stage MTS50/M-Z8
+
 classdef ThorlabsZStage < handle
 
 	properties (Constant, Hidden)
@@ -11,8 +18,8 @@ classdef ThorlabsZStage < handle
 		GENERICMOTORCLASSNAME(1, :) char = 'Thorlabs.MotionControl.GenericMotorCLI.GenericMotorCLI';
 		BRUSHEDMOTORDLL(1, :) char = 'Thorlabs.MotionControl.KCube.DCServoCLI.dll';  
     BRUSHEDMOTORCLASSNAME(1, :) char ='Thorlabs.MotionControl.KCube.DCServoCLI.KCubeDCServo';
-    POS_MAX(1, 1) double = 50; 
-    POS_MIN(1, 1) double = 0;
+    POS_MAX(1, 1) double = 50; % maximum movement range of stage
+    POS_MIN(1, 1) double = 0; % minimum movement range of stage
     TPOLLING(1, 1) = 250; % Default polling time
     TIMEOUTSETTINGS(1, 1) = 7000;
     TIMEOUTMOVE(1, 1) = 100000;
@@ -46,15 +53,18 @@ classdef ThorlabsZStage < handle
 				if ischar(varargin{1})
 					ThorlabsZStage.Connect(varargin{1});
 				end
-      else
-      	serialNumbers = ThorlabsZStage.List_Devices();
-      	ThorlabsZStage.Connect(serialNumbers);
-      end
+			else
+	      serialNumbers = ThorlabsZStage.List_Devices();
+	      if isempty(serialNumbers)
+	      	error("Could not find any devices and serial number was not provided");
+	      end
+	      ThorlabsZStage.Connect(serialNumbers);
+	    end
 
-      % if stage requires homing, do now
-      if ~ThorlabsZStage.isHomed()
-      	ThorlabsZStage.Home();
-      end
+		  % if stage requires homing, do now
+		  if ~ThorlabsZStage.isHomed()
+		   	ThorlabsZStage.Home();
+		  end
 		end
 
 		function delete(tzs)
@@ -88,8 +98,6 @@ classdef ThorlabsZStage < handle
 			isHomed = ~tzs.deviceNET.NeedsHoming();
 		end
 
-	end
-
-
+	end % end of methods
 
 end

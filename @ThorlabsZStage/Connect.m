@@ -17,6 +17,8 @@ function Connect(tzs, serialNo)
     end
 
 	if ~tzs.isConnected
+        fprintf("[ThorlabsZStage] Connecting to device %s... ", serialNo);
+        tStart = tic();
         tzs.deviceNET= ...
             Thorlabs.MotionControl.KCube.DCServoCLI.KCubeDCServo.CreateKCubeDCServo(serialNo);   
         tzs.deviceNET.ClearDeviceExceptions(); % Clear device exceptions via .NET interface
@@ -40,6 +42,7 @@ function Connect(tzs, serialNo)
             error(['Catch: Unable to initialise device ',char(serialNo)]);
         end
         tzs.isConnected = 1;
+        fprintf("done after %.1f sec!\n", toc(tStart));
     else % Device is already connected
         error('Device is already connected.')
     end
